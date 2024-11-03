@@ -11,7 +11,8 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check .",
 		"test:unit": "vitest",
-		"test": "npm run test:unit -- --run"
+		"test": "npm run test:unit -- --run",
+		"generate-types": "npx supabase gen types --lang=typescript --project-id `$PROJECT_REF` --schema public > src/lib/types_db.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -29,6 +30,7 @@
 	},
 	"dependencies": {
 		"@supabase/ssr": "^0.5.1",
-		"@supabase/supabase-js": "^2.46.1"
+		"@supabase/supabase-js": "^2.46.1",
+		"stripe": "^17.3.1"
 	}
 }
