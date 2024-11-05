@@ -4,6 +4,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import Stripe from 'stripe';
 import { stripe } from '$lib/utils/stripe/config';
+import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
 import {
 	upsertProductRecord,
 	upsertPriceRecord,
@@ -28,7 +29,7 @@ const relevantEvents = new Set([
 export async function POST({ request }: RequestEvent) {
 	const body = await request.text();
 	const sig = request.headers.get('stripe-signature');
-	const webhookSecret = import.meta.env.VITE_STRIPE_WEBHOOK_SECRET;
+	const webhookSecret = STRIPE_WEBHOOK_SECRET;
 	let event: Stripe.Event;
 
 	try {
