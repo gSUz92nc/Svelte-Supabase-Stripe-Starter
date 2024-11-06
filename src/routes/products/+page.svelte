@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { getStripe } from '$lib/utils/stripe/client.js'
+    import { getStripe } from '$lib/utils/stripe/client'
 
     // Define types based on your database schema
     interface Price {
@@ -57,7 +57,7 @@
     
 
     let { data } = $props();
-    const { supabase } = $derived(data);
+    const { supabase, session } = $derived(data);
 
     let products: Product[] = $state([]);
     let loading = $state(true);
@@ -113,6 +113,69 @@
         return () => {
             subscription.unsubscribe();
         };
+    }
+    
+    // const handleStripeCheckout = async (price: Price) => {
+    //     setPriceIdLoading(price.id);
+    
+    //     if (!user) {
+    //       setPriceIdLoading(undefined);
+    //       return router.push('/signin/signup');
+    //     }
+    
+    //     const { errorRedirect, sessionId } = await checkoutWithStripe(
+    //       price,
+    //       currentPath
+    //     );
+    
+    //     if (errorRedirect) {
+    //       setPriceIdLoading(undefined);
+    //       return router.push(errorRedirect);
+    //     }
+    
+    //     if (!sessionId) {
+    //       setPriceIdLoading(undefined);
+    //       return router.push(
+    //         getErrorRedirect(
+    //           currentPath,
+    //           'An unknown error occurred.',
+    //           'Please try again later or contact a system administrator.'
+    //         )
+    //       );
+    //     }
+    
+    //     const stripe = await getStripe();
+    //     stripe?.redirectToCheckout({ sessionId });
+    
+    //     setPriceIdLoading(undefined);
+    //   };
+    async function handleStripeCheckout(price: Price) {
+      
+        const stripe = await getStripe();
+      
+        // Check if the user is authenticated
+        if (!session) {
+            // Redirect to the login page
+            window.location.href = '/login'; 
+            return;
+        }
+      
+        
+        const { error } = await stripe.redirectToCheckout({
+            lineItems: [
+                {
+                    price: price.id,
+                    quantity: 1
+                }
+            ],
+            mode: 'subscription',
+            successUrl: `${window.location.origin}/account?session_id={CHECKOUT_SESSION_ID}`,
+            cancelUrl: `${window.location.origin}/account`
+        });
+
+        if (error) {
+            console.error(error);
+        }
     }
 
     onMount(initializeProductsSubscription);

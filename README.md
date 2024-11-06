@@ -41,3 +41,4 @@ You can preview the production build with `npm run preview`.
 ## Things to do
 
 - Change project id in `package.json`
+- Update Site URL on supabase
