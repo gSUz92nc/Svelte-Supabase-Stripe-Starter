@@ -5,7 +5,6 @@
     let { data } = $props();
     const { supabase, session } = $derived(data);
 
-    let currentPassword = $state('');
     let newPassword = $state('');
     let confirmPassword = $state('');
     let loading = $state(false);
@@ -23,14 +22,6 @@
                 throw new Error("New passwords don't match");
             }
 
-            // First verify the current password
-            const { error: signInError } = await supabase.auth.signInWithPassword({
-                email: session?.user?.email ?? '',
-                password: currentPassword
-            });
-
-            if (signInError) throw new Error('Current password is incorrect');
-
             // Update to new password
             const { error: updateError } = await supabase.auth.updateUser({
                 password: newPassword
@@ -39,7 +30,6 @@
             if (updateError) throw updateError;
 
             success = 'Password updated successfully';
-            currentPassword = '';
             newPassword = '';
             confirmPassword = '';
 
@@ -83,18 +73,6 @@
                 </div>
             {/if}
             <div class="rounded-md shadow-sm -space-y-px">
-                <div>
-                    <label for="currentPassword" class="sr-only">Current Password</label>
-                    <input
-                        id="currentPassword"
-                        name="currentPassword"
-                        type="password"
-                        required
-                        bind:value={currentPassword}
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Current Password"
-                    />
-                </div>
                 <div>
                     <label for="newPassword" class="sr-only">New Password</label>
                     <input

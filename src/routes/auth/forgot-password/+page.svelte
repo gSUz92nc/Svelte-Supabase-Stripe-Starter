@@ -14,7 +14,7 @@
 			loading = true;
 			error = null;
 
-			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email);
+			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: "/auth/update-password"});
 
 			if (signInError) throw signInError;
 
