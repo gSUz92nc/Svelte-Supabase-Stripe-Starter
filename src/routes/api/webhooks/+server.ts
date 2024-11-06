@@ -34,7 +34,7 @@ export async function POST({ request }: RequestEvent) {
 
 	try {
 		if (!sig || !webhookSecret) return new Response('Webhook secret not found.', { status: 400 });
-		event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+		event = await stripe.webhooks.constructEventAsync(body, sig, webhookSecret);
 		console.log(`🔔  Webhook received: ${event.type}`);
 	} catch (err: any) {
 		console.log(`❌ Error message: ${err.message}`);
