@@ -69,7 +69,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	event.locals.user = user;
 
 	// Redirect to /auth/sign-in if user is not signed in
-	if (!event.locals.session && ['/products', '/home'].some(path => event.url.pathname.startsWith(path))) {
+	if (!event.locals.session && ['/products', '/home', '/auth/update-password'].some(path => event.url.pathname.startsWith(path))) {
 		redirect(303, '/auth/sign-in');
 	}
 
