@@ -76,7 +76,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	// Redirect to /products if user is already signed in
 	if (event.locals.session && ['/auth/sign-in', '/auth/sign-up', '/auth/error', '/auth/verify-email'].includes(event.url.pathname)) {
 		redirect(303, '/home');
-	}
+	}verify-email
 
 	return resolve(event);
 };

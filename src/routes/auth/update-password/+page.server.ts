@@ -8,6 +8,9 @@ export const load = async ({ url, locals: { supabase} }: RequestEvent) => {
   
   if (token_hash && type) {
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+    
+    console.log(error)
+    
     if (error) {
       redirect(303, "/auth/error")
     }
