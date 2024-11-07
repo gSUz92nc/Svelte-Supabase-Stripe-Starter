@@ -9,7 +9,7 @@ export const GET: RequestHandler = async (event) => {
   } = event
   const token_hash = url.searchParams.get('token_hash') as string
   const type = url.searchParams.get('type') as EmailOtpType | null
-  const next = url.searchParams.get('next') ?? '/'
+  const next = url.searchParams.get('next') ?? '/home'
 
   /**
    * Clean up the redirect URL by deleting the Auth flow parameters.
