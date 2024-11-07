@@ -45,3 +45,4 @@ You can preview the production build with `npm run preview`.
 - Add redirect URL '/auth/update-password' on supabase
 - Possibly cascade delete on supabase
 - Update Auth templates: Go to the Auth templates page in your dashboard. In the Confirm signup template, change {{ .ConfirmationURL }} to {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email.
+- Outlook safelinks messes up auth links.
