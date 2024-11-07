@@ -13,7 +13,7 @@ export const actions: Actions = {
 			console.error(error);
 			redirect(303, '/auth/error');
 		} else {
-			redirect(303, '/products');
+			redirect(303, '/home');
 		}
 	}
 };
