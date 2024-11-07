@@ -1,10 +1,13 @@
-import type { EmailOtpType } from '@supabase/supabase-js'
 import { redirect } from '@sveltejs/kit'
-
+import { type EmailOtpType } from '@supabase/supabase-js'
 import type { RequestHandler } from './$types'
 
-export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
-  const token_hash = url.searchParams.get('token_hash')
+export const GET: RequestHandler = async (event) => {
+  const {
+    url,
+    locals: { supabase },
+  } = event
+  const token_hash = url.searchParams.get('token_hash') as string
   const type = url.searchParams.get('type') as EmailOtpType | null
   const next = url.searchParams.get('next') ?? '/'
 
@@ -19,15 +22,14 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
   redirectTo.searchParams.delete('type')
 
   if (token_hash && type) {
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+    const { error } = await supabase.auth.verifyOtp({ token_hash, type })
     if (!error) {
       redirectTo.searchParams.delete('next')
       redirect(303, redirectTo)
     }
-    
-    console.log(error)
   }
 
+  // return the user to an error page with some instructions
   redirectTo.pathname = '/auth/error'
   redirect(303, redirectTo)
 }

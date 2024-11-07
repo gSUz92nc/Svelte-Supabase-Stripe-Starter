@@ -47,13 +47,6 @@
             goto('/auth/sign-in')
         }
     }
-
-    function preventDefault(fn: (event: Event) => void) {
-        return function (event: Event) {
-            event.preventDefault();
-            fn(event);
-        };
-    }
 </script>
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -61,7 +54,7 @@
         <div>
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Update Password</h2>
         </div>
-        <form class="mt-8 space-y-6" onsubmit={preventDefault(handleUpdatePassword)}>
+        <form class="mt-8 space-y-6">
             {#if error}
                 <div class="rounded-md bg-red-50 p-4">
                     <div class="text-sm text-red-700">
@@ -105,7 +98,7 @@
 
             <div>
                 <button
-                    type="submit"
+                    onclick={handleUpdatePassword}
                     disabled={loading}
                     class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
