@@ -42,3 +42,4 @@ You can preview the production build with `npm run preview`.
 
 - Change project id in `package.json`
 - Update Site URL on supabase
+- Add redirect URL '/auth/update-password' on supabase

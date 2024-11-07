@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { PUBLIC_SITE_URL } from "$env/static/public"
 
 	let { data } = $props();
 	const { supabase, session } = $derived(data);
@@ -14,7 +15,7 @@
 			loading = true;
 			error = null;
 
-			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: "/auth/update-password"});
+			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${PUBLIC_SITE_URL}/auth/update-password`});
 
 			if (signInError) throw signInError;
 

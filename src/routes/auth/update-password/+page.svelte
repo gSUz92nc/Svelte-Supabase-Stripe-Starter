@@ -1,9 +1,10 @@
 <script lang="ts">
     import { enhance } from '$app/forms';
     import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
     let { data } = $props();
-    const { supabase, session } = $derived(data);
+    const { supabase, session, code } = $derived(data);
 
     let newPassword = $state('');
     let confirmPassword = $state('');
@@ -50,6 +51,20 @@
             fn(event);
         };
     }
+    
+    async function signInFromCode() {
+        // Check for "code" parameter from url
+        
+        const { error } = await  supabase.auth.exchangeCodeForSession(code || '')
+        
+        if (error) {
+            console.error('Error signing in from code:', error)
+        }
+    }
+    
+    onMount(() => {
+      signInFromCode()
+    })
 </script>
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
