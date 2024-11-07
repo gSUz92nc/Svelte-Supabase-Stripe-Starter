@@ -1,3 +1,8 @@
+<script lang="ts">
+    let { data} = $props();
+    const { session } = data;
+</script>
+
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
 	<div class="container mx-auto px-4 py-16">
 		<header class="text-center mb-16">
@@ -30,4 +35,7 @@
 			</a>
 		</div>
 	</div>
+	<p>
+	   {JSON.stringify(session)}
+	</p>
 </main>
