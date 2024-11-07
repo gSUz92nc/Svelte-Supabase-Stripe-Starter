@@ -42,6 +42,9 @@
             }
         } finally {
             loading = false;
+            
+            // Redirect to /auth/sign-in
+            goto('/auth/sign-in')
         }
     }
 
