@@ -4,18 +4,18 @@
 	import { PUBLIC_SITE_URL } from "$env/static/public"
 
 	let { data } = $props();
-	const { supabase, session } = $derived(data);
+	const { supabase } = $derived(data);
 
 	let email = $state('');
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 
-	async function handleSignUp() {
+	async function handleOTPLoginToUpdatePassword() {
 		try {
 			loading = true;
 			error = null;
 
-			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${PUBLIC_SITE_URL}/auth/update-password`});
+			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email);
 
 			if (signInError) throw signInError;
 
@@ -46,7 +46,7 @@
 		<div>
 			<h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Forgot your password?</h2>
 		</div>
-		<form class="mt-8 space-y-6" onsubmit={preventDefault(handleSignUp)}>
+		<form class="mt-8 space-y-6" onsubmit={preventDefault(handleOTPLoginToUpdatePassword)}>
 			{#if error}
 				<div class="rounded-md bg-red-50 p-4">
 					<div class="text-sm text-red-700">

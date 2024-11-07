@@ -1,4 +1,4 @@
-<form method="POST" action="/auth/signup">
+<form method="POST">
 	<label>
 		Email
 		<input name="email" type="email" />
