@@ -1,6 +1,6 @@
 <script lang="ts">
-    let { data} = $props();
-    const { session } = data;
+	let { data } = $props();
+	const { session } = data;
 </script>
 
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -17,6 +17,18 @@
 					<p class="text-gray-300">{feature.description}</p>
 				</div>
 			{/each}
+		</div>
+		<div class="flex flex-col items-center justify-center space-y-4 mb-16">
+			<a
+				href="/auth/sign-in"
+				class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
+				>Sign In</a
+			>
+			<a
+				href="/auth/sign-up"
+				class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
+				>Create Account</a
+			>
 		</div>
 
 		<div class="text-center">
@@ -36,6 +48,6 @@
 		</div>
 	</div>
 	<p>
-	   {JSON.stringify(session)}
+		{JSON.stringify(session)}
 	</p>
 </main>
