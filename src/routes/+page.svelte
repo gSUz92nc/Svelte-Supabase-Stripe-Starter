@@ -19,16 +19,21 @@
 			{/each}
 		</div>
 		<div class="flex flex-col items-center justify-center space-y-4 mb-16">
-			<a
-				href="/auth/sign-in"
-				class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
-				>Sign In</a
-			>
-			<a
-				href="/auth/sign-up"
-				class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
-				>Create Account</a
-			>
+			{#if !session}
+				<a
+					href="/auth/sign-in"
+					class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
+				>Sign In</a>
+				<a
+					href="/auth/sign-up"
+					class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
+				>Create Account</a>
+			{:else}
+				<a
+					href="/home"
+					class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
+				>Go to Dashboard</a>
+			{/if}
 		</div>
 
 		<div class="text-center">
@@ -47,7 +52,4 @@
 			</a>
 		</div>
 	</div>
-	<p>
-		{JSON.stringify(session)}
-	</p>
 </main>

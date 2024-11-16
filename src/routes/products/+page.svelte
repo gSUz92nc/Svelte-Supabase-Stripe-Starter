@@ -181,7 +181,7 @@
 										<!-- Show manage button for subscribed products -->
 										<div class="flex justify-end">
 											<a
-												href="/account"
+												href="/account/manage"
 												class="bg-gray-600 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition duration-300"
 											>
 												Manage Subscription
