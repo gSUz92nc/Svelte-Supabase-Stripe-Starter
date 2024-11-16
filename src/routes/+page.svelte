@@ -26,7 +26,7 @@
 				Supabase and Stripe. Doing this setup now will save you time later.
 			</p>
 			<a
-				href="https://github.com/your-repo-link"
+				href="https://github.com/gSUz92nc/Svelte-Starter"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"

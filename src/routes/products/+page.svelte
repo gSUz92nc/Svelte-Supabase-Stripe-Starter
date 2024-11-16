@@ -2,65 +2,24 @@
 	import { onMount } from 'svelte';
 	import { getStripe } from '$lib/utils/stripe/client';
 	import { page } from '$app/stores';
+	import type { Database } from '$lib/types_db';
+
+	type Product = Database['public']['Tables']['products']['Row'] & {
+		prices: Database['public']['Tables']['prices']['Row'][];
+	};
+
+	type Price = Database['public']['Tables']['prices']['Row'];
+
+	type Subscription = Database['public']['Tables']['subscriptions']['Row'] & {
+		prices: Price | null;
+	};
 
 	let { data } = $props();
 	const { supabase, user } = $derived(data);
 
-	// Define types based on your database schema
-	interface Price {
-		id: string;
-		product_id: string;
-		active: boolean;
-		currency: string;
-		interval?: 'day' | 'week' | 'month' | 'year';
-		interval_count?: number;
-		unit_amount: number;
-		type: 'one_time' | 'recurring';
-	}
-
-	interface Product {
-		id: string;
-		name: string;
-		description: string | null;
-		active: boolean;
-		image: string | null;
-		prices?: Price[];
-	}
-
-	interface Subscription {
-		id: string;
-		user_id: string;
-		status: string;
-		price_id: string;
-		quantity: number;
-		cancel_at_period_end: boolean;
-		created: string;
-		current_period_start: string;
-		current_period_end: string;
-		ended_at: string | null;
-		cancel_at: string | null;
-		canceled_at: string | null;
-		trial_start: string | null;
-		trial_end: string | null;
-		prices?: PriceWithProduct | null;
-	}
-
-	interface ProductWithPrices extends Product {
-		prices: Price[];
-	}
-
-	interface PriceWithProduct extends Price {
-		products: Product | null;
-	}
-
-	interface SubscriptionWithProduct extends Subscription {
-		prices: PriceWithProduct | null;
-	}
-
-	type BillingInterval = 'lifetime' | 'year' | 'month';
-
-	let products: Product[] = $state([]);
+	let products = $state<Product[]>([]);
 	let loading = $state(true);
+	let subscriptions = $state<Subscription[]>([]);
 
 	async function fetchProducts() {
 		try {
@@ -79,7 +38,7 @@
 
 			if (supabaseError) throw supabaseError;
 
-			products = productsData as Product[];
+			products = productsData;
 		} catch (e) {
 			console.log(e);
 		} finally {
@@ -87,12 +46,27 @@
 		}
 	}
 
+	// Format price object to a human-readable string
 	function formatPrice(price: Price) {
-		return new Intl.NumberFormat('en-US', {
-			style: 'currency',
-			currency: price.currency,
-			minimumFractionDigits: 0
-		}).format(price.unit_amount / 100);
+		// Check if price object is valid
+		if (price.unit_amount && price.currency) {
+			return new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: price.currency || '',
+				minimumFractionDigits: 0
+			}).format((price.unit_amount ?? 0) / 100);
+		} else {
+			// Handle errorneous price object
+			return 'Error while formatting price';
+		}
+	}
+
+	function isProductSubscribed(product: Product): boolean {
+		return subscriptions.some(
+			(subscription) =>
+				subscription.prices?.product_id === product.id &&
+				['trialing', 'active'].includes(subscription.status || '')
+		);
 	}
 
 	function initializeProductsSubscription() {
@@ -133,15 +107,14 @@
 		});
 
 		const result = await response.json();
-		const sessionId = JSON.parse(result.data)[2]
+		const sessionId = JSON.parse(result.data)[2];
 
 		if (sessionId) {
-		
-		    console.log("Running stripe.redirectToCheckout")
+			console.log('Running stripe.redirectToCheckout');
 
 			const stripe = await getStripe();
-			
-			console.log(stripe)
+
+			console.log(stripe);
 			stripe?.redirectToCheckout({ sessionId });
 		} else if (result.errorRedirect) {
 			// Handle error redirect
@@ -149,7 +122,32 @@
 		}
 	}
 
-	onMount(initializeProductsSubscription);
+	async function getSubscriptionStatus() {
+		console.log('Running');
+		if (!user) return [];
+
+		console.log('getSubscriptionStatus');
+
+		const { data: subscriptionData, error: supabaseError } = await supabase
+			.from('subscriptions')
+			.select(`*, prices (*,products (*))`)
+			.in('status', ['trialing', 'active']);
+
+		console.log(subscriptionData);
+
+		if (supabaseError) throw supabaseError;
+
+		subscriptions = subscriptionData;
+
+		return subscriptions;
+	}
+
+	onMount(async () => {
+		initializeProductsSubscription();
+		if (user) {
+			await getSubscriptionStatus();
+		}
+	});
 </script>
 
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -179,22 +177,35 @@
 
 							{#if product.prices && product.prices.length > 0}
 								<div class="space-y-2">
-									{#each product.prices.filter((price) => price.active) as price}
-										<div class="flex justify-between items-center">
-											<span>
-												{formatPrice(price)}
-												{#if price.type === 'recurring'}
-													/{price.interval}
-												{/if}
-											</span>
-											<button
-												class="bg-white text-gray-900 px-4 py-2 rounded-full hover:bg-gray-200 transition duration-300"
-												onclick={() => handleStripeCheckout(price)}
+									{#if isProductSubscribed(product)}
+										<!-- Show manage button for subscribed products -->
+										<div class="flex justify-end">
+											<a
+												href="/account"
+												class="bg-gray-600 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition duration-300"
 											>
-												{price.type === 'recurring' ? 'Subscribe' : 'Buy Now'}
-											</button>
+												Manage Subscription
+											</a>
 										</div>
-									{/each}
+									{:else}
+										<!-- Show purchase/subscribe buttons for non-subscribed products -->
+										{#each product.prices.filter((price) => price.active) as price}
+											<div class="flex justify-between items-center">
+												<span>
+													{formatPrice(price)}
+													{#if price.type === 'recurring'}
+														/{price.interval}
+													{/if}
+												</span>
+												<button
+													class="bg-white text-gray-900 px-4 py-2 rounded-full hover:bg-gray-200 transition duration-300"
+													onclick={() => handleStripeCheckout(price)}
+												>
+													{price.type === 'recurring' ? 'Subscribe' : 'Buy Now'}
+												</button>
+											</div>
+										{/each}
+									{/if}
 								</div>
 							{/if}
 						</div>
