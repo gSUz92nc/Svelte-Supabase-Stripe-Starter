@@ -31,7 +31,7 @@
                     <h3 class="text-xl font-semibold mb-2">Quick Actions</h3>
                     <div class="space-x-4">
                         <a href="/products" class="text-blue-400 hover:underline">Browse Products</a>
-                        <a href="/account" class="text-blue-400 hover:underline">Settings</a>
+                        <a href="/account/manage" class="text-blue-400 hover:underline">Settings</a>
                     </div>
                 </div>
             </div>
