@@ -53,7 +53,82 @@ Just fill in all the necessary info and don't worry about any additional setting
 ![Spinner for project creation](./static/databasesetup.png)
 
 After it has been setup you should see something like this:
-![alt text](image-1.png)
+
+![Supabase successful project creation](./static/databasecreated.png)
+
+Now that your project is setup we need to add our Supabase API keys to our .env.local.  
+
+On the left of the supabase dashboard there is a "Project API" button which will open a drawer with your project keys. 
+
+*Make sure to select the "Connect" tab on the left*
+
+![Supabase keys demonstration](./static/supabasekeys.png)
+
+Now copy the keys using the "Copy" button and then replace the placeholder values in your .env.local file.
+
+- PUBLIC_SUPABASE_URL -> Project URL
+- PUBLIC_SUPABASE_ANON_KEY -> Client API key
+- SUPABASE_SERVICE_ROLE_KEY -> Service key
+
+*Note: Supabase has recently announced that they plan to change the current api key system. [Click here for info.](https://github.com/orgs/supabase/discussions/29260)*
+
+Your .env.local file should look like this:
+
+![Supabase keys example .env implementation](./static/supabasekeysexample.png)
+
+Next we need to setup our database schema since Supabase uses PostgreSQL which is a relational database. All you have to do is copy everything in '/setup/supabase-schema.sql' into the sql editor on the supabase dashboard (found on the right navbar) and press "Run"
+
+![Schema setup example](./static/schemasetup.png)
+
+It will come up with a warning saying the "Query has destructive operation". Acknowledge this and hit "Run this query"
+
+![Dangerous query example](./static/dangerousquery.png)
+
+It should say "Success. No rows returned" at the bottom.
+
+![Schema success example](./static/schemasucccess.png)
+
+If you now go to the table editor using the left navbar you should see your 5 tables from the schema and if you click on any of them they should have all their columns setup as well as [Row-Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) which is what we use to limit what data users can access from each table.
+
+### Setup Stripe
+
+Create a Stripe account at [https://stripe.com](https://stripe.com)
+
+Once you have verified your email click on "Explore features" then click the "x" at the top left 
+
+![Stripe Verified Email](./static/stripeemail.png)
+![Stripe Ignore Features](./static/stripeignorefeatures.png)
+
+You should now be greeted by your Stripe dashboard:
+
+![Stripe Dashboard Example](./static/stripedashboard.png)
+
+Next we want to get our Stripe keys, you may find them on the dashboard as "Publishable key" and "Secret key". If you don't press "CTRL + K" or click on the search bar at the top, type "key" and click on "Developers > API keys"
+
+![Stripe Search](./static/stripesearch.png)
+
+Now all that's left is to copy the keys into your .env.local file
+
+STRIPE_SECRET_KEY -> Secret key
+PUBLIC_STRIPE_PUBLISHABLE_KEY -> Publishable key
+
+*Leave the STRIPE_WEBHOOK_SECRET for now*
+
+### Getting a URL
+
+After setting up your Stripe account we need to get a public URL for our website, this is so Stripe has somewhere to send their webhooks when creating products on Stripe so our database is synced up with Stripe.
+
+There are a few platforms that support SvelteKit and a few are listed below with tutorials of how to setup a project with their platform
+
+- [Cloudflare](https://developers.cloudflare.com/pages/framework-guides/deploy-a-svelte-site/) (Personally recommend and is what I use)
+- [Vercel](https://vercel.com/docs/frameworks/sveltekit)
+- [Netlify](https://docs.netlify.com/frameworks/sveltekit/)
+
+*All platforms offer a free tier to get started*
+
+Your build will probably **NOT** build right away since we are still missing the "PUBLIC_SITE_URL" and "STRIPE_WEBHOOK_SECRET". For now just put in a placeholder string so our build can complete and we get a URL.
+
+
 
 ## Building
 
