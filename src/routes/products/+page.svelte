@@ -21,6 +21,9 @@
 	let loading = $state(true);
 	let subscriptions = $state<Subscription[]>([]);
 
+	/** 
+	 * Fetch all products from Supabase with their associated prices
+	 */
 	async function fetchProducts() {
 		try {
 			const { data: productsData, error: supabaseError } = await supabase
@@ -46,7 +49,10 @@
 		}
 	}
 
-	// Format price object to a human-readable string
+	/**
+	 * Format price to human readable string with currency symbol
+	 * @param price - The price object containing unit_amount and currency
+	 */
 	function formatPrice(price: Price) {
 		// Check if price object is valid
 		if (price.unit_amount && price.currency) {
@@ -61,14 +67,16 @@
 		}
 	}
 
-	function isProductSubscribed(product: Product): boolean {
-		return subscriptions.some(
-			(subscription) =>
-				subscription.prices?.product_id === product.id &&
-				['trialing', 'active'].includes(subscription.status || '')
-		);
+	/**
+	 * Check if the user has any active or trialing subscriptions
+	 */
+	function hasActiveSubscriptions(): boolean {
+		return subscriptions.length > 0;
 	}
 
+	/**
+	 * Initialize real-time subscription for products updates
+	 */
 	function initializeProductsSubscription() {
 		fetchProducts();
 
@@ -92,6 +100,10 @@
 		};
 	}
 
+	/**
+	 * Handle Stripe checkout process
+	 * @param price - The price object for the selected product
+	 */
 	async function handleStripeCheckout(price: Price) {
 		if (!user) {
 			return;
@@ -110,11 +122,9 @@
 		const sessionId = JSON.parse(result.data)[2];
 
 		if (sessionId) {
-			console.log('Running stripe.redirectToCheckout');
 
 			const stripe = await getStripe();
 
-			console.log(stripe);
 			stripe?.redirectToCheckout({ sessionId });
 		} else if (result.errorRedirect) {
 			// Handle error redirect
@@ -122,18 +132,17 @@
 		}
 	}
 
+	/**
+	 * Fetch user's subscription status
+	 */
 	async function getSubscriptionStatus() {
-		console.log('Running');
-		if (!user) return [];
 
-		console.log('getSubscriptionStatus');
+		if (!user) return [];
 
 		const { data: subscriptionData, error: supabaseError } = await supabase
 			.from('subscriptions')
 			.select(`*, prices (*,products (*))`)
 			.in('status', ['trialing', 'active']);
-
-		console.log(subscriptionData);
 
 		if (supabaseError) throw supabaseError;
 
@@ -142,43 +151,49 @@
 		return subscriptions;
 	}
 
-	onMount(async () => {
+	onMount(() => {
 		initializeProductsSubscription();
-		if (user) {
-			await getSubscriptionStatus();
-		}
+		getSubscriptionStatus();
 	});
 </script>
 
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
 	<div class="container mx-auto px-4 py-16">
+		<!-- Header Section -->
 		<header class="text-center mb-16">
 			<h1 class="text-5xl font-bold mb-4">Our Products</h1>
 		</header>
 
+		<!-- Loading State -->
 		{#if loading}
 			<div class="text-center">
 				<p>Loading products...</p>
 			</div>
+		<!-- Empty State -->
 		{:else if products.length === 0}
 			<div class="text-center">
 				<p>No products available.</p>
 			</div>
+		<!-- Products Grid -->
 		{:else}
-			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<div class="flex flex-wrap gap-10 justify-items-center justify-center">
 				{#each products as product}
-					<div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden">
+					<div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden w-[25rem]">
+						<!-- Product Image -->
 						{#if product.image}
 							<img src={product.image} alt={product.name} class="w-full h-48 object-cover" />
 						{/if}
+						
+						<!-- Product Details -->
 						<div class="p-6">
 							<h2 class="text-2xl font-semibold mb-2">{product.name}</h2>
 							<p class="text-gray-300 mb-4">{product.description}</p>
 
+							<!-- Pricing Section -->
 							{#if product.prices && product.prices.length > 0}
 								<div class="space-y-2">
-									{#if isProductSubscribed(product)}
-										<!-- Show manage button for subscribed products -->
+									{#if hasActiveSubscriptions()}
+										<!-- Show manage button if user has any subscription -->
 										<div class="flex justify-end">
 											<a
 												href="/account/manage"
@@ -188,7 +203,7 @@
 											</a>
 										</div>
 									{:else}
-										<!-- Show purchase/subscribe buttons for non-subscribed products -->
+										<!-- Show purchase/subscribe buttons if user has no subscriptions -->
 										{#each product.prices.filter((price) => price.active) as price}
 											<div class="flex justify-between items-center">
 												<span>
