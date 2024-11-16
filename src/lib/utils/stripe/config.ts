@@ -9,7 +9,7 @@ export const stripe = new Stripe(
 		// https://github.com/stripe/stripe-node#configuration
 		// https://stripe.com/docs/api/versioning
 		// @ts-ignore
-		apiVersion: "2024-10-28.acacia",
+		apiVersion: "latest",
 		// Register this as an official Stripe plugin.
 		// https://stripe.com/docs/building-plugins#setappinfo
 		appInfo: {

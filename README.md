@@ -109,8 +109,8 @@ Next we want to get our Stripe keys, you may find them on the dashboard as "Publ
 
 Now all that's left is to copy the keys into your .env.local file
 
-STRIPE_SECRET_KEY -> Secret key
-PUBLIC_STRIPE_PUBLISHABLE_KEY -> Publishable key
+- STRIPE_SECRET_KEY -> Secret key
+- PUBLIC_STRIPE_PUBLISHABLE_KEY -> Publishable key
 
 *Leave the STRIPE_WEBHOOK_SECRET for now*
 
@@ -127,6 +127,22 @@ There are a few platforms that support SvelteKit and a few are listed below with
 *All platforms offer a free tier to get started*
 
 Your build will probably **NOT** build right away since we are still missing the "PUBLIC_SITE_URL" and "STRIPE_WEBHOOK_SECRET". For now just put in a placeholder string so our build can complete and we get a URL.
+
+Hopefully after doing this you will get a public site URL which we will use for setting up Stripe webhooks. Make a note of what the url is. In my case it would be "https://svelte-starter-572.pages.dev"
+
+![alt text](image.png)
+
+*Make sure not to copy your deployment url which may only point to that specific deployment and not future ones. It generally has a code infront of the actual site URL*
+
+You can now update your .env.local with your new site URL and update your environment variable on your hosting service.
+
+- PUBLIC_SITE_URL -> "Your site URL"
+
+### Stripe Webhooks
+
+To set up the webhooks go back to your Stripe dashboard and press "CTRL + K" or click the search bar and type in "event destination" and click on "Create an event destination"
+
+![Stripe Event Destination Example](./static/stripeevent.png)
 
 
 
