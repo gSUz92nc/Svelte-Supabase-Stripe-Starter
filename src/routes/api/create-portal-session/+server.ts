@@ -8,7 +8,10 @@ export async function POST({ locals: { safeGetSession } }) {
 		const { user } = await safeGetSession();
 
 		if (!user) {
-			return json({ error: 'Unauthorized' }, { status: 401 });
+			return json({ 
+				error: 'Unauthorized',
+				code: 'auth_required'
+			}, { status: 401 });
 		}
 
 		// Get the stripe_customer_id from the customers table
@@ -19,7 +22,11 @@ export async function POST({ locals: { safeGetSession } }) {
 			.single();
 
 		if (customerError || !customerData?.stripe_customer_id) {
-			return json({ error: 'No customer record found' }, { status: 404 });
+			return json({ 
+				error: 'No active subscription found',
+				code: 'no_subscription',
+				message: 'You need an active or had a subscription to access the billing portal'
+			}, { status: 404 });
 		}
 
 		const returnUrl = `${PUBLIC_SITE_URL}/home`;
@@ -32,6 +39,9 @@ export async function POST({ locals: { safeGetSession } }) {
 		return json({ url: portalSession.url });
 	} catch (error) {
 		console.error('Error creating portal session:', error);
-		return json({ error: 'Error creating portal session' }, { status: 500 });
+		return json({ 
+			error: 'Error creating portal session',
+			code: 'portal_error'
+		}, { status: 500 });
 	}
 }

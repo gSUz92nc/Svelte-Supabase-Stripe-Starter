@@ -238,7 +238,17 @@ Next full in the data making sure that it is a "recurring" product and then clic
 ![Product Create Example 2](./static/createproduct2.png)
 ![Product In Supabase Project](./static/product.png)
 
-and if you go to your site, create an account and then go to '/products' you should see
+and if you go to your site, create an account and then go to '/products' you should see your added product!
+
+### Customer Billing Portal
+
+To let your customers manage their subscription we need to configure a few settings on the Stripe dashboard. Once on the dashboard press "CTRL + K" or click the search bar at the top to open it. Once the search bar is open type "Customer portal" and then click on the "Customer portal option"
+
+![Stripe Customer Portal Search Example](./static/stripeportal.png)
+
+Under  "Subscriptions" tick "Customers can switch plans" so that your users can switch plans
+
+![Stripe Enable Switch Plans Example](./static/changesub.png)
 
 ## Credits
 
