@@ -246,9 +246,11 @@ To let your customers manage their subscription we need to configure a few setti
 
 ![Stripe Customer Portal Search Example](./static/stripeportal.png)
 
-Under  "Subscriptions" tick "Customers can switch plans" so that your users can switch plans
+Under  "Subscriptions" tick "Customers can switch plans" so that your users can switch plans.
 
 ![Stripe Enable Switch Plans Example](./static/changesub.png)
+
+Feel free to configure everything here to what suites your use case. However I recommend not changing any values that are on by default.
 
 ## Credits
 

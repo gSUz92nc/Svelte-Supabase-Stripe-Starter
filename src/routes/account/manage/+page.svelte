@@ -61,7 +61,7 @@
                     <p class="text-gray-300 mb-4">
                         You need an active subscription to access the billing portal.
                     </p>
-                    <a href="/pricing" class="text-blue-400 hover:underline">View pricing plans</a>
+                    <a href="/products" class="text-blue-400 hover:underline">View pricing plans</a>
                 {:else}
                     <a href="/home" class="text-blue-400 hover:underline">Back to home</a>
                 {/if}
