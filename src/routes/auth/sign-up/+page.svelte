@@ -1,3 +1,12 @@
+<script lang="ts">
+    let loading = $state(false);
+
+    function onSubmit() {
+        loading = true;
+        // Form will submit naturally, loading state will be reset on navigation
+    }
+</script>
+
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
 	<div class="container mx-auto px-4 py-16">
 		<header class="text-center mb-16">
@@ -6,7 +15,7 @@
 		</header>
 
 		<div class="max-w-md mx-auto bg-gray-800 bg-opacity-50 p-8 rounded-lg">
-			<form method="POST" class="space-y-6">
+			<form method="POST" class="space-y-6" onsubmit={() => onSubmit()}>
 				<div>
 					<label class="block text-sm font-medium mb-2" for="email"> Email Address </label>
 					<input
@@ -25,8 +34,36 @@
 				</div>
 				<button
 					class="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-					>Sign up</button
+					disabled={loading}
 				>
+					{#if loading}
+						<span class="inline-flex items-center">
+							<svg
+								class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									class="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									stroke-width="4"
+								></circle>
+								<path
+									class="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+							Signing up...
+						</span>
+					{:else}
+						Sign up
+					{/if}
+				</button>
 			</form>
 			<nav class="mt-8 text-center">
 				<a href="/auth/sign-in" class="text-sm text-gray-400 hover:underline"
