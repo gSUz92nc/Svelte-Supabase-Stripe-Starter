@@ -146,10 +146,38 @@ To actually get authentication emails setup we need to update the links in the e
 
 Once there all you need to do is copy these templates into their respective sections.
 
+#### Confirm signup
+```html
+<h2>Confirm your signup</h2>
 
+<p>Welcome! Please click the button below to confirm your account:</p>
+
+<a href="{{ .SiteURL }}/auth/confirm-signup?confirmation_url={{ urlquery .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup">
+    Confirm your account
+</a>
+
+<p>If you didn't create this account, you can safely ignore this email.</p>
+```
+
+#### Reset Password
+
+```html
+<h2>Reset Your Password</h2>
+
+<p>Click the button below to reset your password:</p>
+
+<a href="{{ .SiteURL }}/auth/confirm-reset?confirmation_url={{ urlquery .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}">
+    Reset Password
+</a>
+
+<p>If you didn't request a password reset, you can safely ignore this email.</p>
+```
 
 *You can change the text in each of these emails just make sure that the anchor tag's href is unchanged*
 
+#### Adding your Site URL
+
+Finally using the left navbar click on "URL Configuration" and then enter your site URL you got earlier. Make sure there is no trailing "/" so your site URL looks like: "https://example.com" not "https://example.com/"
 
 ### Stripe Webhooks
 

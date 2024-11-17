@@ -39,7 +39,7 @@
             {/if}
 
             <button
-                on:click={handleConfirmation}
+                onclick={handleConfirmation}
                 disabled={loading}
                 class="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white font-medium"
             >
