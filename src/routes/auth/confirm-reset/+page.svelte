@@ -12,7 +12,7 @@
 	 * @throws {Error} If confirmation URL is missing or invalid
 	 * @returns {Promise<void>}
 	 */
-	async function handleConfirmation() {
+	async function handleConfirmation(): Promise<void> {
 		try {
 			loading = true;
 			if (!confirmationUrl) throw new Error('No confirmation URL found');

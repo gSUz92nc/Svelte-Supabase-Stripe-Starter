@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { stripe } from '$lib/utils/stripe/config';
 import { createOrRetrieveCustomer } from '$lib/utils/supabase/admin';
-import { getURL, getErrorRedirect, calculateTrialEndUnixTimestamp } from '$lib/utils/helpers';
+import { getURL, calculateTrialEndUnixTimestamp } from '$lib/utils/helpers';
 import { createClient } from '@supabase/supabase-js';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import type { Tables } from '$lib/types_db';
@@ -99,19 +99,15 @@ export async function checkoutWithStripe(
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
-				errorRedirect: getErrorRedirect(
-					redirectPath,
-					error.message,
-					'Please try again later or contact a system administrator.'
-				)
+				errorRedirect: `${redirectPath}?error=${encodeURIComponent(
+					error.message
+				)}&message=${encodeURIComponent('Please try again later or contact a system administrator.')}`
 			};
 		} else {
 			return {
-				errorRedirect: getErrorRedirect(
-					redirectPath,
-					'An unknown error occurred.',
-					'Please try again later or contact a system administrator.'
-				)
+				errorRedirect: `${redirectPath}?error=${encodeURIComponent(
+					'An unknown error occurred.'
+				)}&message=${encodeURIComponent('Please try again later or contact a system administrator.')}`
 			};
 		}
 	}
@@ -122,7 +118,7 @@ export async function checkoutWithStripe(
  * @param {string} currentPath - Current application path
  * @returns {Promise<string>} Portal URL or error redirect URL
  */
-export async function createStripePortal(currentPath: string) {
+export async function createStripePortal(currentPath: string): Promise<string> {
 	try {
 		const {
 			error,
@@ -167,17 +163,13 @@ export async function createStripePortal(currentPath: string) {
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error(error);
-			return getErrorRedirect(
-				currentPath,
-				error.message,
-				'Please try again later or contact a system administrator.'
-			);
+			return `${currentPath}?error=${encodeURIComponent(
+				error.message
+			)}&message=${encodeURIComponent('Please try again later or contact a system administrator.')}`;
 		} else {
-			return getErrorRedirect(
-				currentPath,
-				'An unknown error occurred.',
-				'Please try again later or contact a system administrator.'
-			);
+			return `${currentPath}?error=${encodeURIComponent(
+				'An unknown error occurred.'
+			)}&message=${encodeURIComponent('Please try again later or contact a system administrator.')}`;
 		}
 	}
 }

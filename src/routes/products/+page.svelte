@@ -130,15 +130,16 @@
 			});
 
 			const result = await response.json();
-			const sessionId = JSON.parse(result.data)[2];
 
-			if (sessionId) {
+			if (result.success && result.sessionId) {
 				const stripe = await getStripe();
-
-				stripe?.redirectToCheckout({ sessionId });
+				stripe?.redirectToCheckout({ sessionId: result.sessionId });
 			} else if (result.errorRedirect) {
 				// Handle error redirect
 				window.location.href = result.errorRedirect;
+			} else if (result.error) {
+				// Handle error message
+				console.error('Checkout error:', result.error);
 			}
 		} catch (error) {
 			console.error('Checkout error:', error);

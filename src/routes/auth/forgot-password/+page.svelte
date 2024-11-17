@@ -14,13 +14,12 @@
 	 * @throws {Error} If email is invalid or request fails
 	 * @returns {Promise<void>}
 	 */
-	async function handleOTPLoginToUpdatePassword() {
+	async function handleOTPLoginToUpdatePassword(): Promise<void> {
 		try {
 			loading = true;
 			error = null;
 
 			const { data, error: signInError } = await supabase.auth.resetPasswordForEmail(email);
-
 			if (signInError) throw signInError;
 
 			if (data) {
@@ -37,17 +36,6 @@
 		}
 	}
 
-	/**
-	 * Wraps event handler to prevent form submission
-	 * @param {function} fn - The function to wrap
-	 * @returns {function} Event handler that prevents default behavior
-	 */
-	function preventDefault(fn: (event: Event) => void) {
-		return function (event: Event) {
-			event.preventDefault();
-			fn(event);
-		};
-	}
 </script>
 
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -58,7 +46,7 @@
 		</header>
 
 		<div class="max-w-md mx-auto bg-gray-800 bg-opacity-50 p-8 rounded-lg">
-			<form class="space-y-6" onsubmit={preventDefault(handleOTPLoginToUpdatePassword)}>
+			<form class="space-y-6" onsubmit={handleOTPLoginToUpdatePassword}>
 				{#if error}
 					<div class="rounded-md bg-red-900 bg-opacity-50 p-4">
 						<div class="text-sm text-red-200">

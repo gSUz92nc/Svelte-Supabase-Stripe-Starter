@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 
 	let { data } = $props();
 	const { supabase } = $derived(data);
@@ -18,7 +16,7 @@
 	 * @throws {Error} If passwords don't match or update fails
 	 * @returns {Promise<void>}
 	 */
-	async function handleUpdatePassword() {
+	async function handleUpdatePassword(): Promise<void> {
 		try {
 			loading = true;
 			error = null;
@@ -51,15 +49,6 @@
 			// Redirect to /auth/sign-in
 			goto('/auth/sign-in');
 		}
-	}
-
-	/**
-	 * Wraps event handler to prevent form submission
-	 * @param {function} fn - The function to wrap
-	 * @returns {function} Event handler that prevents default behavior
-	 */
-	function preventDefault(fn: (event: Event) => void) {
-		// ...existing code...
 	}
 </script>
 
