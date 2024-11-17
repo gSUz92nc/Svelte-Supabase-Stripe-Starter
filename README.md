@@ -246,11 +246,31 @@ To let your customers manage their subscription we need to configure a few setti
 
 ![Stripe Customer Portal Search Example](./static/stripeportal.png)
 
-Under  "Subscriptions" tick "Customers can switch plans" so that your users can switch plans.
+Under  "Subscriptions" tick "Customers can switch plans" so that your users can switch plans and then add the plans they can switch to right under that.
 
 ![Stripe Enable Switch Plans Example](./static/changesub.png)
 
-Feel free to configure everything here to what suites your use case. However I recommend not changing any values that are on by default.
+Feel free to configure everything here to what suites your use case. However I recommend not changing any values that are on by default. Don't forget to press "Save changes" at the top right when you are done.
+
+## Helpful Tools
+
+### Generate Database Types
+
+The base database types following those generated in the "setup/supabase-schema.sql" are saved in "src/lib/types_db.ts". If you make any changes to the database schema you can regenerate these types by running the following command:
+
+```bash
+npm run generate:types
+
+# or whatever package manager you use
+```
+
+Just make sure to edit the command in package.json to have your Supabase project ID. If you haven't logged in to Supabase CLI you can do so by running:
+
+```bash
+npx supabase login
+```
+
+And then following the instructions.
 
 ## Credits
 
