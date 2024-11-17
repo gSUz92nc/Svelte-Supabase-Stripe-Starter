@@ -43,7 +43,9 @@ create table customers (
   stripe_customer_id text
 );
 alter table customers enable row level security;
--- No policies as this is a private table that the user must not have access to.
+create policy "Deny all access to customers table." 
+  on customers for all 
+  using (false);
 
 /** 
 * PRODUCTS
