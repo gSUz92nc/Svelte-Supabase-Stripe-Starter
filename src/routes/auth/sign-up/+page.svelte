@@ -1,10 +1,16 @@
 <script lang="ts">
-    let loading = $state(false);
+	/**
+	 * State variable to track loading state during form submission.
+	 */
+	let loading: boolean = $state(false);
 
-    function onSubmit() {
-        loading = true;
-        // Form will submit naturally, loading state will be reset on navigation
-    }
+	/**
+	 * Handles form submission and sets loading state.
+	 * Form will submit naturally; loading state resets on navigation.
+	 */
+	function onSubmit(): void {
+		loading = true;
+	}
 </script>
 
 <main class="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">

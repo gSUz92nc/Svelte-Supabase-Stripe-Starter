@@ -1,14 +1,14 @@
 <script lang="ts">
     /**
-     * State variable to track loading state during form submission
+     * State variable to track loading state during form submission.
      */
-    let loading = $state(false);
+    let loading: boolean = $state(false);
 
     /**
-     * Handles form submission and sets loading state
-     * Form will submit naturally, loading state will be reset on navigation
+     * Handles form submission and sets loading state.
+     * Form will submit naturally; loading state resets on navigation.
      */
-    function onSubmit() {
+    function onSubmit(): void {
         loading = true;
     }
 </script>
