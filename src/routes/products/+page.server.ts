@@ -32,10 +32,22 @@ export const actions = {
 
 			console.log(result);
 
-			return {
-				success: true,
-				sessionId: result.sessionId
-			};
+			if (result.sessionId) {
+				return {
+					success: true,
+					sessionId: result.sessionId
+				};
+			} else if (result.errorRedirect) {
+				return {
+					status: 400,
+					errorRedirect: result.errorRedirect
+				};
+			} else {
+				return {
+					status: 500,
+					error: 'Failed to create checkout session'
+				};
+			}
 		} catch (error) {
 			return {
 				status: 500,
