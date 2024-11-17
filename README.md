@@ -186,6 +186,8 @@ Finally using the left navbar click on "URL Configuration" and then enter your s
 
 ![Supabase Auth Site URL Example](./static/siteurl.png)
 
+**WARNING**: While using the built-in email service emails will only be sent out to those who are in your Supabase organisation so if you plan to go into a more public environment you probably want to eventually setup your own SMTP service. For more info you can check out [this discussion](https://github.com/orgs/supabase/discussions/29370)
+
 ### Stripe Webhooks
 
 To set up the webhooks go back to your Stripe dashboard and press "CTRL + K" or click the search bar and type in "event destination" and click on "Create an event destination"
@@ -252,6 +254,25 @@ Under  "Subscriptions" tick "Customers can switch plans" so that your users can 
 
 Feel free to configure everything here to what suites your use case. However I recommend not changing any values that are on by default. Don't forget to press "Save changes" at the top right when you are done.
 
+## Post Setup
+
+I'd recommend testing everything works as expected after setting everything up. For convenience I'd check everything in this order:
+
+	- Stripe subscriptions can be created on the dashboard and appear in the Supabase table editor after creating
+	- Your website is accessible
+	- You can create an account (you get a confirmation email + Account email is confirmed on Supabase dashboard)
+	- You can access "/home" after signing in
+	- Delete your cookies for the site and then attempt login
+	- Delete your cookies again and make sure the forgot password flow works
+	- Test updating/archiving/deleting (never used subscriptions) works and changes are reflected on the Supabase table editor
+	- Navigate to the products page and buy subscription (use Stripe's test card 4242 4242 4242 4242, 12/34, 424, any name + address)
+	- Make sure the subscription is shown in the Supabase table editor
+	- Test the customer portal works by navigating to "/account/manage" and make sure changes are reflected on Stripe and Supabase
+
+	- And anything else I forgot to add that your user might do.
+
+*Remember to setup your Stripe business profile before going into production*
+
 ## Helpful Tools
 
 ### Generate Database Types
@@ -260,9 +281,9 @@ The base database types following those generated in the "setup/supabase-schema.
 
 ```bash
 npm run generate:types
-
-# or whatever package manager you use
 ```
+
+or whatever package manager you are using.
 
 Just make sure to edit the command in package.json to have your Supabase project ID. If you haven't logged in to Supabase CLI you can do so by running:
 
@@ -270,17 +291,12 @@ Just make sure to edit the command in package.json to have your Supabase project
 npx supabase login
 ```
 
-And then following the instructions.
+And then follow the instructions.
+
+### Package Scripts
+
+I'd recommend looking at the package.json file to see all the scripts that are available to you. They all do what they say on the tin so I won't go over them here.
 
 ## Credits
 
 This project is heavily inspired by the [Next.js Subscription Starter](https://github.com/vercel/nextjs-subscription-payments) by Vercel, which I only found out about because of [this](https://www.youtube.com/watch?v=I7CFD99sp1g) video by Supabase.
-
-## Things to do
-
-- Change project id in `package.json`
-- Update Site URL on supabase
-- Add redirect URL '/auth/update-password' on supabase
-- Possibly cascade delete on supabase
-- Update Auth templates: Go to the Auth templates page in your dashboard. In the Confirm signup template, change {{ .ConfirmationURL }} to {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email.
-- Outlook safelinks messes up auth links. ¯\_(ツ)\_/¯
