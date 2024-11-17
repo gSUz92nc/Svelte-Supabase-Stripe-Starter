@@ -258,16 +258,16 @@ Feel free to configure everything here to what suites your use case. However I r
 
 I'd recommend testing everything works as expected after setting everything up. For convenience I'd check everything in this order:
 
-- Stripe subscriptions can be created on the dashboard and appear in the Supabase table editor after creating
-- Your website is accessible
-- You can create an account (you get a confirmation email + Account email is confirmed on Supabase dashboard)
-- You can access "/home" after signing in
-- Delete your cookies for the site and then attempt login
-- Delete your cookies again and make sure the forgot password flow works
-- Test updating/archiving/deleting (never used subscriptions) works and changes are reflected on the Supabase table editor
-- Navigate to the products page and buy subscription (use Stripe's test card 4242 4242 4242 4242, 12/34, 424, any name + address)
-- Make sure the subscription is shown in the Supabase table editor
-- Test the customer portal works by navigating to "/account/manage" and make sure changes are reflected on Stripe and Supabase
+1. Stripe subscriptions can be created on the dashboard and appear in the Supabase table editor after creating
+2. Your website is accessible
+3. You can create an account (you get a confirmation email + Account email is confirmed on Supabase dashboard)
+4. You can access "/home" after signing in
+5. Delete your cookies for the site and then attempt login
+6. Delete your cookies again and make sure the forgot password flow works
+7. Test updating/archiving/deleting (never used subscriptions) works and changes are reflected on the Supabase table editor
+8. Navigate to the products page and buy subscription (use Stripe's test card 4242 4242 4242 4242, 12/34, 424, any name + address)
+9. Make sure the subscription is shown in the Supabase table editor
+10. Test the customer portal works by navigating to "/account/manage" and make sure changes are reflected on Stripe and Supabase
 
 - And anything else I forgot to add that your user might do.
 
