@@ -1,3 +1,14 @@
+/**
+ * Stripe webhook handler for processing various subscription and payment events.
+ * Manages product, price, and subscription updates in the local database.
+ * 
+ * Handles the following webhook events:
+ * - Product lifecycle (created, updated, deleted)
+ * - Price changes (created, updated, deleted)
+ * - Subscription status changes
+ * - Checkout session completion
+ */
+
 // Adapted from https://github.com/vercel/nextjs-subscription-payments
 // Specifically: https://github.com/vercel/nextjs-subscription-payments/blob/main/app/api/webhooks/route.ts
 

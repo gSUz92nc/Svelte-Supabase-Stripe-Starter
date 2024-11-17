@@ -18,6 +18,13 @@ type CheckoutResponse = {
 	sessionId?: string;
 };
 
+/**
+ * Creates a Stripe checkout session for subscription
+ * @param {Price} price - The price object containing product and payment details
+ * @param {string} redirectPath - Path to redirect after successful checkout
+ * @param {any} user - User object from authentication
+ * @returns {Promise<CheckoutResponse>} Checkout session ID or error redirect URL
+ */
 export async function checkoutWithStripe(
 	price: Price,
 	redirectPath: string = '/account',
@@ -110,6 +117,11 @@ export async function checkoutWithStripe(
 	}
 }
 
+/**
+ * Creates a Stripe customer portal session for managing subscriptions
+ * @param {string} currentPath - Current application path
+ * @returns {Promise<string>} Portal URL or error redirect URL
+ */
 export async function createStripePortal(currentPath: string) {
 	try {
 		const {

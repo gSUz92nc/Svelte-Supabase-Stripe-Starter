@@ -1,3 +1,8 @@
+/**
+ * Email confirmation endpoint handler.
+ * Verifies email confirmation tokens and manages the email verification flow.
+ */
+
 import { redirect } from '@sveltejs/kit';
 import { type EmailOtpType } from '@supabase/supabase-js';
 import type { RequestHandler } from './$types';

@@ -2,6 +2,12 @@ import type { Actions } from '@sveltejs/kit';
 import { checkoutWithStripe } from '$lib/utils/stripe/server';
 import type { Tables } from '$lib/types_db';
 
+/**
+ * Handles product checkout form submissions.
+ * Validates user authentication and initiates the Stripe checkout process.
+ * Returns session ID for successful checkout initialization or error details.
+ */
+
 export const actions = {
 	checkout: async ({ request, locals: { safeGetSession } }) => {
 		const formData = await request.formData();

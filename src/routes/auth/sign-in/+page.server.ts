@@ -1,3 +1,8 @@
+/**
+ * Handles user authentication through Supabase Auth.
+ * Processes login attempts and manages redirections based on the outcome.
+ */
+
 import { redirect } from '@sveltejs/kit';
 
 import type { Actions } from './$types';

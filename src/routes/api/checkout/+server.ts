@@ -1,3 +1,9 @@
+/**
+ * Handles creation of Stripe checkout sessions.
+ * Creates a new customer if needed and initializes the checkout process
+ * for both one-time payments and subscriptions.
+ */
+
 import { json } from '@sveltejs/kit';
 import { stripe } from '$lib/utils/stripe/config';
 import type { RequestHandler } from './$types';

@@ -12,6 +12,12 @@
 	let error = $state<string | null>(null);
 	let success = $state<string | null>(null);
 
+	/**
+	 * Handles the password update process
+	 * @async
+	 * @throws {Error} If passwords don't match or update fails
+	 * @returns {Promise<void>}
+	 */
 	async function handleUpdatePassword() {
 		try {
 			loading = true;
@@ -45,6 +51,15 @@
 			// Redirect to /auth/sign-in
 			goto('/auth/sign-in');
 		}
+	}
+
+	/**
+	 * Wraps event handler to prevent form submission
+	 * @param {function} fn - The function to wrap
+	 * @returns {function} Event handler that prevents default behavior
+	 */
+	function preventDefault(fn: (event: Event) => void) {
+		// ...existing code...
 	}
 </script>
 

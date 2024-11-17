@@ -8,6 +8,12 @@
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 
+	/**
+	 * Handles the password reset request process
+	 * @async
+	 * @throws {Error} If email is invalid or request fails
+	 * @returns {Promise<void>}
+	 */
 	async function handleOTPLoginToUpdatePassword() {
 		try {
 			loading = true;
@@ -31,6 +37,11 @@
 		}
 	}
 
+	/**
+	 * Wraps event handler to prevent form submission
+	 * @param {function} fn - The function to wrap
+	 * @returns {function} Event handler that prevents default behavior
+	 */
 	function preventDefault(fn: (event: Event) => void) {
 		return function (event: Event) {
 			event.preventDefault();

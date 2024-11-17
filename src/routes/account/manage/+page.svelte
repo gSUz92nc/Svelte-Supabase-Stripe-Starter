@@ -1,15 +1,15 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    /** Loading state for the portal redirect */
-    let loading = $state(true);
-    
-    /** Error message to display if something goes wrong */
+    let loading = $state<boolean>(true);
     let error = $state<string | null>(null);
-    
-    /** Whether the user needs to subscribe first */
-    let needsSubscription = $state(false);
+    let needsSubscription = $state<boolean>(false);
 
+    /**
+     * Initializes the portal session creation and handles the redirect
+     * @async
+     * @throws {Error} When the API call fails or returns an error
+     */
     onMount(async () => {
         try {
             const response = await fetch('/api/create-portal-session', {

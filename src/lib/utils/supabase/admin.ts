@@ -19,7 +19,13 @@ const supabaseAdmin = createClient<Database>(
 	SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-const upsertProductRecord = async (product: Stripe.Product) => {
+/**
+ * Upserts a product record into the database.
+ * @param product - The Stripe product object.
+ * @throws Will throw an error if the upsert operation fails.
+ * @returns A promise that resolves when the operation is complete.
+ */
+const upsertProductRecord = async (product: Stripe.Product): Promise<void> => {
 	const productData: Product = {
 		id: product.id,
 		active: product.active,
@@ -34,7 +40,19 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 	console.log(`Product inserted/updated: ${product.id}`);
 };
 
-const upsertPriceRecord = async (price: Stripe.Price, retryCount = 0, maxRetries = 3) => {
+/**
+ * Upserts a price record into the database with retry logic.
+ * @param price - The Stripe price object.
+ * @param retryCount - The current retry attempt count.
+ * @param maxRetries - The maximum number of retry attempts allowed.
+ * @throws Will throw an error if the upsert operation fails after maximum retries.
+ * @returns A promise that resolves when the operation is complete.
+ */
+const upsertPriceRecord = async (
+	price: Stripe.Price,
+	retryCount = 0,
+	maxRetries = 3
+): Promise<void> => {
 	const priceData: Price = {
 		id: price.id,
 		product_id: typeof price.product === 'string' ? price.product : '',
@@ -68,7 +86,13 @@ const upsertPriceRecord = async (price: Stripe.Price, retryCount = 0, maxRetries
 	}
 };
 
-const deleteProductRecord = async (product: Stripe.Product) => {
+/**
+ * Deletes a product record from the database.
+ * @param product - The Stripe product to delete.
+ * @throws Will throw an error if the deletion operation fails.
+ * @returns A promise that resolves when the operation is complete.
+ */
+const deleteProductRecord = async (product: Stripe.Product): Promise<void> => {
 	const { error: deletionError } = await supabaseAdmin
 		.from('products')
 		.delete()
@@ -77,13 +101,19 @@ const deleteProductRecord = async (product: Stripe.Product) => {
 	console.log(`Product deleted: ${product.id}`);
 };
 
-const deletePriceRecord = async (price: Stripe.Price) => {
+/**
+ * Deletes a price record from the database.
+ * @param price - The Stripe price to delete.
+ * @throws Will throw an error if the deletion operation fails.
+ * @returns A promise that resolves when the operation is complete.
+ */
+const deletePriceRecord = async (price: Stripe.Price): Promise<void> => {
 	const { error: deletionError } = await supabaseAdmin.from('prices').delete().eq('id', price.id);
 	if (deletionError) throw new Error(`Price deletion failed: ${deletionError.message}`);
 	console.log(`Price deleted: ${price.id}`);
 };
 
-const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
+const upsertCustomerToSupabase = async (uuid: string, customerId: string): Promise<string> => {
 	const { error: upsertError } = await supabaseAdmin
 		.from('customers')
 		.upsert([{ id: uuid, stripe_customer_id: customerId }]);
@@ -94,7 +124,7 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
 	return customerId;
 };
 
-const createCustomerInStripe = async (uuid: string, email: string) => {
+const createCustomerInStripe = async (uuid: string, email: string): Promise<string> => {
 	const customerData = { metadata: { supabaseUUID: uuid }, email: email };
 	const newCustomer = await stripe.customers.create(customerData);
 	if (!newCustomer) throw new Error('Stripe customer creation failed.');
@@ -102,7 +132,21 @@ const createCustomerInStripe = async (uuid: string, email: string) => {
 	return newCustomer.id;
 };
 
-const createOrRetrieveCustomer = async ({ email, uuid }: { email: string; uuid: string }) => {
+/**
+ * Creates or retrieves a Stripe customer for a given email and UUID.
+ * @param params - An object containing the email and UUID.
+ * @param params.email - The customer's email address.
+ * @param params.uuid - The customer's unique user ID.
+ * @throws Will throw an error if customer lookup or creation fails.
+ * @returns A promise that resolves to the Stripe customer ID.
+ */
+const createOrRetrieveCustomer = async ({
+	email,
+	uuid
+}: {
+	email: string;
+	uuid: string;
+}): Promise<string> => {
 	// Check if the customer already exists in Supabase
 	const { data: existingSupabaseCustomer, error: queryError } = await supabaseAdmin
 		.from('customers')
@@ -160,8 +204,15 @@ const createOrRetrieveCustomer = async ({ email, uuid }: { email: string; uuid: 
 
 /**
  * Copies the billing details from the payment method to the customer object.
+ * @param uuid - The customer's unique user ID.
+ * @param payment_method - The Stripe payment method object.
+ * @throws Will throw an error if the customer update fails.
+ * @returns A promise that resolves when the operation is complete.
  */
-const copyBillingDetailsToCustomer = async (uuid: string, payment_method: Stripe.PaymentMethod) => {
+const copyBillingDetailsToCustomer = async (
+	uuid: string,
+	payment_method: Stripe.PaymentMethod
+): Promise<void> => {
 	//Todo: check this assertion
 	const customer = payment_method.customer as string;
 	const { name, phone, address } = payment_method.billing_details;
@@ -178,11 +229,19 @@ const copyBillingDetailsToCustomer = async (uuid: string, payment_method: Stripe
 	if (updateError) throw new Error(`Customer update failed: ${updateError.message}`);
 };
 
+/**
+ * Manages changes in subscription status.
+ * @param subscriptionId - The ID of the subscription.
+ * @param customerId - The ID of the customer.
+ * @param createAction - Indicates if the subscription is newly created.
+ * @throws Will throw an error if subscription retrieval or database operations fail.
+ * @returns A promise that resolves when the operation is complete.
+ */
 const manageSubscriptionStatusChange = async (
 	subscriptionId: string,
 	customerId: string,
 	createAction = false
-) => {
+): Promise<void> => {
 	// Get customer's UUID from mapping table.
 	const { data: customerData, error: noCustomerError } = await supabaseAdmin
 		.from('customers')

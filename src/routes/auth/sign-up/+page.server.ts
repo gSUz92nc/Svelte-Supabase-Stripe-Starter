@@ -1,3 +1,8 @@
+/**
+ * Handles user registration through Supabase Auth.
+ * Redirects to email verification page on success or error page on failure.
+ */
+
 import { redirect } from '@sveltejs/kit';
 
 import type { Actions } from './$types';

@@ -1,7 +1,11 @@
+/**
+ * Stripe instance configuration
+ * Initializes Stripe with API version and application information
+ * @important Review and update configuration before deployment
+ */
+
 import Stripe from 'stripe';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
-
-// TODO: [IMPORTANT] Review and update Stripe configuration before deployment
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY ?? '', {
 	// https://github.com/stripe/stripe-node#configuration

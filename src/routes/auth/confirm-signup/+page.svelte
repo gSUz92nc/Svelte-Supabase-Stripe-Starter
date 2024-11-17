@@ -7,7 +7,13 @@
 	let error = $state<string | null>(null);
 	let loading = $state(false);
 
-	async function handleConfirmation() {
+	/**
+	 * Handles the email confirmation process for new signups
+	 * @async
+	 * @throws {Error} If confirmation URL is missing or invalid
+	 * @returns {Promise<void>}
+	 */
+	async function handleConfirmation(): Promise<void> {
 		try {
 			loading = true;
 			if (!confirmationUrl) throw new Error('No confirmation URL found');

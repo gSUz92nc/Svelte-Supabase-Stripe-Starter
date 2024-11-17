@@ -6,6 +6,12 @@
 	let error = $state<string | null>(null);
 	let loading = $state(false);
 
+	/**
+	 * Handles the password reset confirmation process
+	 * @async
+	 * @throws {Error} If confirmation URL is missing or invalid
+	 * @returns {Promise<void>}
+	 */
 	async function handleConfirmation() {
 		try {
 			loading = true;

@@ -2,30 +2,32 @@
 	import { onMount } from 'svelte';
 	import { getStripe } from '$lib/utils/stripe/client';
 	import { page } from '$app/stores';
-	import type { Database } from '$lib/types_db';
+	import type { Tables } from '$lib/types_db';
 
-	type Product = Database['public']['Tables']['products']['Row'] & {
-		prices: Database['public']['Tables']['prices']['Row'][];
+	type Product = Tables<'products'> & {
+		prices: Price[];
 	};
-
-	type Price = Database['public']['Tables']['prices']['Row'];
-
-	type Subscription = Database['public']['Tables']['subscriptions']['Row'] & {
-		prices: Price | null;
-	};
+	type Price = Tables<'prices'>
+	type Subscription = Tables<'subscriptions'>
 
 	let { data } = $props();
 	const { supabase, user } = $derived(data);
 
+
+	// State variables for managing products and loading states
 	let products = $state<Product[]>([]);
 	let loading = $state(true);
 	let subscriptions = $state<Subscription[]>([]);
 	let loadingPriceId = $state<string | null>(null);
 
 	/**
-	 * Fetch all products from Supabase with their associated prices
+	 * Fetches all active products from Supabase with their associated prices
+	 * Orders products by name and filters for active status
+	 * @async
+	 * @throws {Error} If the Supabase query fails
+	 * @returns {Promise<void>}
 	 */
-	async function fetchProducts() {
+	async function fetchProducts(): Promise<void> {
 		try {
 			const { data: productsData, error: supabaseError } = await supabase
 				.from('products')
@@ -51,10 +53,11 @@
 	}
 
 	/**
-	 * Format price to human readable string with currency symbol
-	 * @param price - The price object containing unit_amount and currency
+	 * Formats a price into a human-readable string with appropriate currency symbol
+	 * @param {Price} price - The price object to format
+	 * @returns {string} Formatted price string with currency symbol
 	 */
-	function formatPrice(price: Price) {
+	function formatPrice(price: Price): string {
 		// Check if price object is valid
 		if (price.unit_amount && price.currency) {
 			return new Intl.NumberFormat('en-US', {
@@ -69,16 +72,18 @@
 	}
 
 	/**
-	 * Check if the user has any active or trialing subscriptions
+	 * Checks if the user has any active or trialing subscriptions
+	 * @returns {boolean} True if user has active subscriptions, false otherwise
 	 */
 	function hasActiveSubscriptions(): boolean {
 		return subscriptions.length > 0;
 	}
 
 	/**
-	 * Initialize real-time subscription for products updates
+	 * Sets up real-time subscription for product updates using Supabase
+	 * @returns {Function} Cleanup function to unsubscribe from the channel
 	 */
-	function initializeProductsSubscription() {
+	function initializeProductsSubscription(): Function {
 		fetchProducts();
 
 		const subscription = supabase
@@ -102,10 +107,13 @@
 	}
 
 	/**
-	 * Handle Stripe checkout process
-	 * @param price - The price object for the selected product
+	 * Handles the Stripe checkout process for a selected price
+	 * @async
+	 * @param {Price} price - The price object for the selected product
+	 * @throws {Error} If the checkout process fails
+	 * @returns {Promise<void>}
 	 */
-	async function handleStripeCheckout(price: Price) {
+	async function handleStripeCheckout(price: Price): Promise<void> {
 		if (!user || loadingPriceId) {
 			return;
 		}
@@ -140,9 +148,12 @@
 	}
 
 	/**
-	 * Fetch user's subscription status
+	 * Fetches the user's current subscription status
+	 * @async
+	 * @throws {Error} If the Supabase query fails
+	 * @returns {Promise<Subscription[]>} Array of active or trialing subscriptions
 	 */
-	async function getSubscriptionStatus() {
+	async function getSubscriptionStatus(): Promise<Subscription[]> {
 		if (!user) return [];
 
 		const { data: subscriptionData, error: supabaseError } = await supabase

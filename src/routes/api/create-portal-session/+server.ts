@@ -1,3 +1,9 @@
+/**
+ * Creates a Stripe Customer Portal session for managing subscriptions.
+ * Requires authentication and an existing Stripe customer record.
+ * Returns a URL to the customer portal or appropriate error responses.
+ */
+
 import { json } from '@sveltejs/kit';
 import { stripe } from '$lib/utils/stripe/config';
 import { PUBLIC_SITE_URL } from '$env/static/public';

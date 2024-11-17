@@ -2,7 +2,11 @@
 	let { data } = $props();
 	const { user } = data;
 
-	// Helper function to safely get username from email
+	/**
+	 * Extracts a display name from an email address
+	 * @param {string | undefined | null} email - The email address to process
+	 * @returns {string} The username portion of the email or 'User' if invalid
+	 */
 	function getUserDisplayName(email: string | undefined | null): string {
 		return email?.split('@')[0] ?? 'User';
 	}
