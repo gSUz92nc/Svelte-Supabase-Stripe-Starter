@@ -21,7 +21,7 @@
 	let loading = $state(true);
 	let subscriptions = $state<Subscription[]>([]);
 
-	/** 
+	/**
 	 * Fetch all products from Supabase with their associated prices
 	 */
 	async function fetchProducts() {
@@ -122,7 +122,6 @@
 		const sessionId = JSON.parse(result.data)[2];
 
 		if (sessionId) {
-
 			const stripe = await getStripe();
 
 			stripe?.redirectToCheckout({ sessionId });
@@ -136,7 +135,6 @@
 	 * Fetch user's subscription status
 	 */
 	async function getSubscriptionStatus() {
-
 		if (!user) return [];
 
 		const { data: subscriptionData, error: supabaseError } = await supabase
@@ -169,12 +167,12 @@
 			<div class="text-center">
 				<p>Loading products...</p>
 			</div>
-		<!-- Empty State -->
+			<!-- Empty State -->
 		{:else if products.length === 0}
 			<div class="text-center">
 				<p>No products available.</p>
 			</div>
-		<!-- Products Grid -->
+			<!-- Products Grid -->
 		{:else}
 			<div class="flex flex-wrap gap-10 justify-items-center justify-center">
 				{#each products as product}
@@ -183,7 +181,7 @@
 						{#if product.image}
 							<img src={product.image} alt={product.name} class="w-full h-48 object-cover" />
 						{/if}
-						
+
 						<!-- Product Details -->
 						<div class="p-6">
 							<h2 class="text-2xl font-semibold mb-2">{product.name}</h2>

@@ -20,12 +20,11 @@ export const actions = {
 		}
 
 		try {
-		
-		console.log("Creating checkout session")
-		
+			console.log('Creating checkout session');
+
 			const result = await checkoutWithStripe(priceData, returnUrl, user);
-			
-			console.log(result)
+
+			console.log(result);
 
 			return {
 				success: true,

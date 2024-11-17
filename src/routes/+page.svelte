@@ -23,16 +23,19 @@
 				<a
 					href="/auth/sign-in"
 					class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
-				>Sign In</a>
+					>Sign In</a
+				>
 				<a
 					href="/auth/sign-up"
 					class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
-				>Create Account</a>
+					>Create Account</a
+				>
 			{:else}
 				<a
 					href="/home"
 					class="inline-block bg-white text-gray-900 font-semibold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300"
-				>Go to Dashboard</a>
+					>Go to Dashboard</a
+				>
 			{/if}
 		</div>
 

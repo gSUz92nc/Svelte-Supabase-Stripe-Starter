@@ -11,21 +11,25 @@ const supabase: Handle = async ({ event, resolve }) => {
 	 *
 	 * The Supabase client gets the Auth token from the request cookies.
 	 */
-	event.locals.supabase = createServerClient<Database>(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		cookies: {
-			getAll: () => event.cookies.getAll(),
-			/**
-			 * SvelteKit's cookies API requires `path` to be explicitly set in
-			 * the cookie options. Setting `path` to `/` replicates previous/
-			 * standard behavior.
-			 */
-			setAll: (cookiesToSet) => {
-				cookiesToSet.forEach(({ name, value, options }) => {
-					event.cookies.set(name, value, { ...options, path: '/' });
-				});
+	event.locals.supabase = createServerClient<Database>(
+		PUBLIC_SUPABASE_URL,
+		PUBLIC_SUPABASE_ANON_KEY,
+		{
+			cookies: {
+				getAll: () => event.cookies.getAll(),
+				/**
+				 * SvelteKit's cookies API requires `path` to be explicitly set in
+				 * the cookie options. Setting `path` to `/` replicates previous/
+				 * standard behavior.
+				 */
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						event.cookies.set(name, value, { ...options, path: '/' });
+					});
+				}
 			}
 		}
-	});
+	);
 
 	/**
 	 * Unlike `supabase.auth.getSession()`, which returns the session _without_
@@ -69,12 +73,22 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	event.locals.user = user;
 
 	// Redirect to /auth/sign-in if user is not signed in
-	if (!event.locals.session && ['/products', '/home', '/auth/update-password'].some(path => event.url.pathname.startsWith(path))) {
+	if (
+		!event.locals.session &&
+		['/products', '/home', '/auth/update-password'].some((path) =>
+			event.url.pathname.startsWith(path)
+		)
+	) {
 		redirect(303, '/auth/sign-in');
 	}
 
 	// Redirect to /products if user is already signed in
-	if (event.locals.session && ['/auth/sign-in', '/auth/sign-up', '/auth/error', '/auth/verify-email'].includes(event.url.pathname)) {
+	if (
+		event.locals.session &&
+		['/auth/sign-in', '/auth/sign-up', '/auth/error', '/auth/verify-email'].includes(
+			event.url.pathname
+		)
+	) {
 		redirect(303, '/home');
 	}
 

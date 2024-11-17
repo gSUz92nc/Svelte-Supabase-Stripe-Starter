@@ -1,6 +1,6 @@
 # Svelte Supabase Stripe Starter
 
-A modern full-stack starter template combining Svelte, Supabase, and Stripe for rapid web application development. This template provides authentication, payment processing, and a responsive UI out of the box. Based on 
+A modern full-stack starter template combining Svelte, Supabase, and Stripe for rapid web application development. This template provides authentication, payment processing, and a responsive UI out of the box. Based on
 
 ## Features
 
@@ -12,15 +12,15 @@ A modern full-stack starter template combining Svelte, Supabase, and Stripe for 
 - 📱 **Responsive Design** - Mobile-friendly interface
 
 ## Architecture
+
 ![Project Architecture](./static/architecture_diagram.png)
-
-
 
 ## Setup Instructions
 
 ### Clone Repository
 
 Clone the repository and change into the new directory:
+
 ```bash
 git https://github.com/gSUz92nc/Svelte-Supabase-Stripe-Starter
 cd Svelte-Supabase-Stripe-Starter
@@ -56,11 +56,11 @@ After it has been setup you should see something like this:
 
 ![Supabase successful project creation](./static/databasecreated.png)
 
-Now that your project is setup we need to add our Supabase API keys to our .env.local.  
+Now that your project is setup we need to add our Supabase API keys to our .env.local.
 
-On the left of the supabase dashboard there is a "Project API" button which will open a drawer with your project keys. 
+On the left of the supabase dashboard there is a "Project API" button which will open a drawer with your project keys.
 
-*Make sure to select the "Connect" tab on the left*
+_Make sure to select the "Connect" tab on the left_
 
 ![Supabase keys demonstration](./static/supabasekeys.png)
 
@@ -70,7 +70,7 @@ Now copy the keys using the "Copy" button and then replace the placeholder value
 - PUBLIC_SUPABASE_ANON_KEY -> Client API key
 - SUPABASE_SERVICE_ROLE_KEY -> Service key
 
-*Note: Supabase has recently announced that they plan to change the current api key system. [Click here for info.](https://github.com/orgs/supabase/discussions/29260)*
+_Note: Supabase has recently announced that they plan to change the current api key system. [Click here for info.](https://github.com/orgs/supabase/discussions/29260)_
 
 Your .env.local file should look like this:
 
@@ -94,7 +94,7 @@ If you now go to the table editor using the left navbar you should see your 5 ta
 
 Create a Stripe account at [https://stripe.com](https://stripe.com)
 
-Once you have verified your email click on "Explore features" then click the "x" at the top left 
+Once you have verified your email click on "Explore features" then click the "x" at the top left
 
 ![Stripe Verified Email](./static/stripeemail.png)
 ![Stripe Ignore Features](./static/stripeignorefeatures.png)
@@ -112,7 +112,7 @@ Now all that's left is to copy the keys into your .env.local file
 - STRIPE_SECRET_KEY -> Secret key
 - PUBLIC_STRIPE_PUBLISHABLE_KEY -> Publishable key
 
-*Leave the STRIPE_WEBHOOK_SECRET for now*
+_Leave the STRIPE_WEBHOOK_SECRET for now_
 
 ### Getting a URL
 
@@ -124,7 +124,7 @@ There are a few platforms that support SvelteKit and a few are listed below with
 - [Vercel](https://vercel.com/docs/frameworks/sveltekit)
 - [Netlify](https://docs.netlify.com/frameworks/sveltekit/)
 
-*All platforms offer a free tier to get started*
+_All platforms offer a free tier to get started_
 
 Your build will probably **NOT** build right away since we are still missing the "PUBLIC_SITE_URL" and "STRIPE_WEBHOOK_SECRET". For now just put in a placeholder string so our build can complete and we get a URL.
 
@@ -132,7 +132,7 @@ Hopefully after doing this you will get a public site URL which we will use for 
 
 ![alt text](image.png)
 
-*Make sure not to copy your deployment url which may only point to that specific deployment and not future ones. It generally has a code infront of the actual site URL*
+_Make sure not to copy your deployment url which may only point to that specific deployment and not future ones. It generally has a code infront of the actual site URL_
 
 You can now update your .env.local with your new site URL and update your environment variable on your hosting service.
 
@@ -147,13 +147,16 @@ To actually get authentication emails setup we need to update the links in the e
 Once there all you need to do is copy these templates into their respective sections.
 
 #### Confirm signup
+
 ```html
 <h2>Confirm your signup</h2>
 
 <p>Welcome! Please click the button below to confirm your account:</p>
 
-<a href="{{ .SiteURL }}/auth/confirm-signup?confirmation_url={{ urlquery .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup">
-    Confirm your account
+<a
+	href="{{ .SiteURL }}/auth/confirm-signup?confirmation_url={{ urlquery .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup"
+>
+	Confirm your account
 </a>
 
 <p>If you didn't create this account, you can safely ignore this email.</p>
@@ -166,18 +169,22 @@ Once there all you need to do is copy these templates into their respective sect
 
 <p>Click the button below to reset your password:</p>
 
-<a href="{{ .SiteURL }}/auth/confirm-reset?confirmation_url={{ urlquery .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}">
-    Reset Password
+<a
+	href="{{ .SiteURL }}/auth/confirm-reset?confirmation_url={{ urlquery .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}"
+>
+	Reset Password
 </a>
 
 <p>If you didn't request a password reset, you can safely ignore this email.</p>
 ```
 
-*You can change the text in each of these emails just make sure that the anchor tag's href is unchanged*
+_You can change the text in each of these emails just make sure that the anchor tag's href is unchanged_
 
 #### Adding your Site URL
 
 Finally using the left navbar click on "URL Configuration" and then enter your site URL you got earlier. Make sure there is no trailing "/" so your site URL looks like: "https://example.com" not "https://example.com/"
+
+![Supabase Auth Site URL Example](./static/siteurl.png)
 
 ### Stripe Webhooks
 
@@ -187,7 +194,7 @@ To set up the webhooks go back to your Stripe dashboard and press "CTRL + K" or 
 
 This will open the workbench where we will enter all the events we want to broadcast to our webhooks endpoint.
 
-*You may also want to update the apiVersion and appInfo in ./src/lib/utils/stripe/config.ts with the current api version and your app info*
+_You may also want to update the apiVersion and appInfo in ./src/lib/utils/stripe/config.ts with the current api version and your app info_
 
 Next select of these events by searching for them:
 
@@ -231,13 +238,10 @@ Next full in the data making sure that it is a "recurring" product and then clic
 ![Product Create Example 2](./static/createproduct2.png)
 ![Product In Supabase Project](./static/product.png)
 
-and if you go to your site, create an account and then go to '/products' you should see 
-
-
-
-
+and if you go to your site, create an account and then go to '/products' you should see
 
 ## Credits
+
 This project is heavily inspired by the [Next.js Subscription Starter](https://github.com/vercel/nextjs-subscription-payments) by Vercel, which I only found out about because of [this](https://www.youtube.com/watch?v=I7CFD99sp1g) video by Supabase.
 
 ## Things to do
@@ -247,4 +251,4 @@ This project is heavily inspired by the [Next.js Subscription Starter](https://g
 - Add redirect URL '/auth/update-password' on supabase
 - Possibly cascade delete on supabase
 - Update Auth templates: Go to the Auth templates page in your dashboard. In the Confirm signup template, change {{ .ConfirmationURL }} to {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email.
-- Outlook safelinks messes up auth links. ¯\_(ツ)_/¯
+- Outlook safelinks messes up auth links. ¯\_(ツ)\_/¯
