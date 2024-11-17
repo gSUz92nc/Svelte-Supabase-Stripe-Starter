@@ -138,6 +138,19 @@ You can now update your .env.local with your new site URL and update your enviro
 
 - PUBLIC_SITE_URL -> "Your site URL"
 
+### Setting Up Auth Emails
+
+To actually get authentication emails setup we need to update the links in the email templates. First navigate to the email templates section on the Supabase dashboard.
+
+![Example of Supabase Email Template Navigation](./static/emailtemplates.png)
+
+Once there all you need to do is copy these templates into their respective sections.
+
+
+
+*You can change the text in each of these emails just make sure that the anchor tag's href is unchanged*
+
+
 ### Stripe Webhooks
 
 To set up the webhooks go back to your Stripe dashboard and press "CTRL + K" or click the search bar and type in "event destination" and click on "Create an event destination"
@@ -197,7 +210,7 @@ and if you go to your site, create an account and then go to '/products' you sho
 
 
 ## Credits
-This project is heavily inspired by the [Next.js Subscription Starter](https://github.com/vercel/nextjs-subscription-payments) by Vercel
+This project is heavily inspired by the [Next.js Subscription Starter](https://github.com/vercel/nextjs-subscription-payments) by Vercel, which I only found out about because of [this](https://www.youtube.com/watch?v=I7CFD99sp1g) video by Supabase.
 
 ## Things to do
 
