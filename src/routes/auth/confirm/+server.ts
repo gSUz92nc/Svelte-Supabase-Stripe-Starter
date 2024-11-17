@@ -22,15 +22,15 @@ export const GET: RequestHandler = async (event) => {
   redirectTo.searchParams.delete('token_hash')
   redirectTo.searchParams.delete('type')
 
-  if (token_hash && type) {
-    const { error } = await supabase.auth.verifyOtp({ token_hash, type })
-    if (!error) {
-      redirectTo.searchParams.delete('next')
-      redirect(303, redirectTo)
-    }
+  if (!token_hash || !type) {
+    redirect(303, '/auth/error')
   }
 
-  // return the user to an error page with some instructions
-  redirectTo.pathname = '/auth/error'
-  redirect(303, redirectTo)
+  const { error } = await supabase.auth.verifyOtp({ token_hash, type })
+  if (error) {
+    console.error('Verification error:', error.message)
+    redirect(303, '/auth/error')
+  }
+
+  redirect(303, next)
 }
