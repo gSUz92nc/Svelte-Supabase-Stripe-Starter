@@ -144,19 +144,57 @@ To set up the webhooks go back to your Stripe dashboard and press "CTRL + K" or 
 
 ![Stripe Event Destination Example](./static/stripeevent.png)
 
+This will open the workbench where we will enter all the events we want to broadcast to our webhooks endpoint.
+
+*You may also want to update the apiVersion and appInfo in ./src/lib/utils/stripe/config.ts with the current api version and your app info*
+
+Next select of these events by searching for them:
+
+- product.created
+- product.updated
+- product.deleted
+- price.created
+- price.updated
+- price.deleted
+- checkout.session.completed
+- customer.subscription.created
+- customer.subscription.updated
+- customer.subscription.deleted
+
+which should look like this:
+
+![Stripe Selected Events](./static/selectedevents.png)
+
+Then press continue. Select the "Webhook endpoint" destination type and then press continue again. Now type in your site URL into the "Endpoint URL" input and then at the end add "/api/webhooks" so that your Endpoint URL is in the format: "https://example.com/api/webhooks". Mine would look like:
+
+![Stripe Endpoint URL Examlple](./static/endpointexample.png)
+
+Then press "Create Endpoint" which should open your event destination in the workbench. Copy your "Signing secret" from the right hand side and paste that into your .env.local file under "STRIPE_WEBHOOK_SECRET" as well as update the environment variable on your hosting platform.
+
+![Stripe Event Destination Secret](./static/eventdestination.png)
+
+- STRIPE_WEBHOOK_SECRET -> Signing Secret
+
+Now rebuild your website after updating the variables and then once it has finished and succeeded your project should be fully set up.
+
+### Create a Subscription
+
+This template only supports subscriptions so let's go over how to create one.
+
+Go to your Stripe dashboard and the on the left click "Product catalogue", then "Create product"
+
+![Product Create Example 1](./static/productcreate1.png)
+
+Next full in the data making sure that it is a "recurring" product and then click "Add product". Then go back to your Supabase project and make sure that it did get added.
+
+![Product Create Example 2](./static/createproduct2.png)
+![Product In Supabase Project](./static/product.png)
+
+and if you go to your site, create an account and then go to '/products' you should see 
 
 
-## Building
 
-To create a production version of your app:
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 
 ## Credits
 This project is heavily inspired by the [Next.js Subscription Starter](https://github.com/vercel/nextjs-subscription-payments) by Vercel

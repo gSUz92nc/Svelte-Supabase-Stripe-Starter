@@ -21,7 +21,6 @@ const relevantEvents = new Set([
 	'price.updated',
 	'price.deleted',
 	'checkout.session.completed',
-	'checkout.session.expired',
 	'customer.subscription.created',
 	'customer.subscription.updated',
 	'customer.subscription.deleted'
